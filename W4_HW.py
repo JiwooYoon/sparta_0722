@@ -13,19 +13,17 @@ soup = BeautifulSoup(data.text, 'html.parser')
 tr_result = soup.select('#body-content > div.newest-list > div > table > tbody > tr')
 
 docs = []
+rank = 1
 
 for song in tr_result:
     title = song.select_one('td.info > a.title.ellipsis')
-    if not title == None:
-        print(title.text)
 
-        ranking = song.select_one('td.number')
-        print(ranking.text)
+    artist = song.select_one ('td.info > a.artist.ellipsis')
 
-        artist = song.select_one ('td.info > a.artist.ellipsis')
-        print(artist.text)
+    print(rank, artist.text, title.text.strip())
 
-        doc = {'title':title.text}
-        docs.append(doc)
+    doc = {'title':title.text, 'artist':artist.text, 'rank':rank}
+    docs.append(doc)
+    rank+= 1
 
 db.songs.insert_many(docs)
